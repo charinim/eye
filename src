@@ -1,0 +1,50 @@
+var maxR = 200;
+var minR = 50;
+var phi = 6.28318530718 / 60;
+
+var minSize = 10;
+var maxSize = 30;
+var spacing = 10;
+
+function setup() {
+  createCanvas(800, 800);
+}
+
+function draw() {
+  background("black");
+  colorMode(HSB, 100);
+  for (var theta = 0; theta < TWO_PI; theta += phi) {
+    stroke(((theta * 100) / TWO_PI + frameCount / 200) % 100, 100, 100);
+    strokeWeight(2);
+    line(
+      width / 2 + minR * cos(theta),
+      height / 2 + minR * sin(theta),
+      width / 2 + maxR * cos(theta),
+      height / 2 + maxR * sin(theta)
+    );
+  }
+  for (var theta = 0 + phi / 2; theta < TWO_PI + phi / 2; theta += phi) {
+    stroke(
+      (((theta * 100) / TWO_PI) * noise(frameCount / 100) + frameCount) % 100,
+      100,
+      100
+    );
+    line(
+      width / 2 + minR * cos(theta),
+      height / 2 + minR * sin(theta),
+      width / 2 + maxR * 1.2 * noise(theta, frameCount / 100) * cos(theta),
+      height / 2 + maxR * 1.2 * noise(theta, frameCount / 100) * sin(theta)
+    );
+  }
+  colorMode(RGB, 100);
+  for (var x = 0; x < width; x += spacing) {
+    for (var y = 0; y < height; y += spacing) {
+      stroke((frameCount / 200) % 1000, 100, 100);
+      var d = dist(mouseX, mouseY, x, y);
+      noFill();
+      var size = d < 300 ? 0 : map(d, 0, 300, 0, maxSize);
+      stroke(map(x, 0, width, 0, 205), map(y, 0, width, 205, 0), 100);
+      rect(x, y, size, size);
+    }
+  }
+}
